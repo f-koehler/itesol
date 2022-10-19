@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     name: ${{ matrix.toolchain.name }} (${{ matrix.toolchain.os }})
-    runs-on: (${{ matrix.toolchain.os }})
+    runs-on: ${{ matrix.toolchain.os }}
     strategy:
       matrix:
         toolchain:
