@@ -131,11 +131,11 @@ namespace itesol {
 
         virtual void reset() {}
 
-        virtual void start(PowerMethod &power_method) {}
+        virtual void start([[maybe_unused]] PowerMethod &power_method) {}
 
-        virtual void observe(const PowerMethod &power_method) {}
+        virtual void observe([[maybe_unused]] const PowerMethod &power_method) {}
 
-        virtual void finish(PowerMethod &power_method) {}
+        virtual void finish([[maybe_unused]] PowerMethod &power_method) {}
     };
 
     template<typename PowerMethodT>
