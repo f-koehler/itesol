@@ -32,33 +32,33 @@ jobs:
             cc: "gcc-11"
             cxx: "g++-11"
             dependencies: "gcc-11 g++-11"
-          - name: "Clang 6",
-            cc: "clang-6.0",
-            cxx: "clang++-6.0",
-            dependencies: "clang-6.0",
-          - name: "Clang 7",
-            cc: "clang-7",
-            cxx: "clang++-7",
-            dependencies: "clang-7",
-          - name: "Clang 8",
-            cc: "clang-8",
-            cxx: "clang++-8",
-            dependencies: "clang-8",
-          - name: "Clang 9",
-            cc: "clang-9",
-            cxx: "clang++-9",
-            dependencies: "clang-9",
-          - name: "Clang 10",
-            cc: "clang-10",
-            cxx: "clang++-10",
-            dependencies: "clang-10",
+          - name: "Clang 6"
+            cc: "clang-6.0"
+            cxx: "clang++-6.0"
+            dependencies: "clang-6.0"
+          - name: "Clang 7"
+            cc: "clang-7"
+            cxx: "clang++-7"
+            dependencies: "clang-7"
+          - name: "Clang 8"
+            cc: "clang-8"
+            cxx: "clang++-8"
+            dependencies: "clang-8"
+          - name: "Clang 9"
+            cc: "clang-9"
+            cxx: "clang++-9"
+            dependencies: "clang-9"
+          - name: "Clang 10"
+            cc: "clang-10"
+            cxx: "clang++-10"
+            dependencies: "clang-10"
     steps:
       - name: Checkout repository.
         uses: actions/checkout@v3
         with:
           submodules: true
       - name: Install compiler.
-        run: sudo apt install -yq ${{ matrix.toolchain.dependencies }}
+        run: sudo apt-get install -yq ${{ matrix.toolchain.dependencies }}
       - name: Configure CMake project.
         run: CC=${{ matrix.toolchain.cc }} CXX=${{ matrix.toolchain.cxx }} cmake -B build
       - name: Build CMake project.
