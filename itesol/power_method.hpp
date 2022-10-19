@@ -131,11 +131,11 @@ namespace itesol {
 
         virtual void reset() {}
 
-        virtual void start([[maybe_unused]] PowerMethod &power_method) {}
+        virtual void start([[maybe_unused]] const PowerMethod &power_method) {}
 
         virtual void observe([[maybe_unused]] const PowerMethod &power_method) {}
 
-        virtual void finish([[maybe_unused]] PowerMethod &power_method) {}
+        virtual void finish([[maybe_unused]] const PowerMethod &power_method) {}
     };
 
     template<typename PowerMethodT>
@@ -159,7 +159,7 @@ namespace itesol {
         using PowerMethod = PowerMethodT;
         using ParentClass = QuietPowerMethodObserver<PowerMethod>;
 
-        void start(PowerMethod &power_method) override {
+        void start(const PowerMethod &power_method) override {
             ParentClass::start(power_method);
 
             spdlog::info("Starting power method with dimension {} …", power_method.get_dimension());
@@ -173,7 +173,7 @@ namespace itesol {
             spdlog::info("\tResidual: {}", power_method.get_residual());
         }
 
-        void finish(PowerMethod &power_method) override {
+        void finish(const PowerMethod &power_method) override {
             ParentClass::finish(power_method);
             if (power_method.is_converged()) {
                 spdlog::info("Power method converged after {} iterations.", power_method.get_iterations());
