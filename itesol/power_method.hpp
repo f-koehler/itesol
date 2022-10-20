@@ -106,7 +106,7 @@ namespace itesol {
 
         Index get_dimension() const { return m_dimension; }
 
-        bool is_converged() const {
+        [[nodiscard]] bool is_converged() const {
             return m_converged;
         }
 
