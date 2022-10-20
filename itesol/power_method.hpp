@@ -67,8 +67,9 @@ namespace itesol {
                              Scalar tolerance = 1e-10)
                 : m_dimension(dimension), m_allocator(std::move(allocator)), m_max_iterations(max_iterations),
                   m_tolerance(tolerance),
+                  m_converged(false), m_rayleigh_quotient(0), m_residual(0),
                   m_eigenvector(m_allocator.create_random_vector(dimension)),
-                  m_new_eigenvector(m_allocator.create_vector(dimension)) {}
+                  m_new_eigenvector(m_allocator.create_vector(dimension)), m_iterations(0) {}
 
         template<typename Observer = DummyPowerMethodObserver<PowerMethod>>
         void compute(LinearOperator &op) {
