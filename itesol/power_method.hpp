@@ -9,6 +9,8 @@
 #include <Eigen/Dense>
 #include <spdlog/spdlog.h>
 
+#include "eigen.hpp"
+
 namespace itesol {
     template<typename ScalarT>
     class EigenDenseAllocator {
@@ -16,11 +18,7 @@ namespace itesol {
         using Scalar = ScalarT;
         using Index = int;
         using Matrix = Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic>;
-        using MatrixRef = Eigen::Ref<Matrix>;
-        using MatrixCRef = const Eigen::Ref<const Matrix>;
         using Vector = Eigen::Matrix<Scalar, Eigen::Dynamic, 1>;
-        using VectorRef = Eigen::Ref<Vector>;
-        using VectorCRef = const Eigen::Ref<const Vector>;
 
         Vector create_vector(Index rows) {
             return Vector(rows);
@@ -45,9 +43,8 @@ namespace itesol {
         using Index = typename Allocator::Index;
         using Scalar = typename Allocator::Scalar;
         using Vector = typename Allocator::Vector;
-        using VectorRef = typename Allocator::VectorRef;
-        using VectorCRef = typename Allocator::VectorCRef;
-        using LinearOperator = std::function<void(VectorCRef, VectorRef)>;
+        using Matrix = typename Allocator::Matrix;
+        using LinearOperator = std::function<void(CRef<Vector>, Ref<Vector>)>;
 
     private:
         Index m_dimension;
@@ -71,7 +68,6 @@ namespace itesol {
                   m_eigenvector(m_allocator.create_random_vector(dimension)),
                   m_new_eigenvector(m_allocator.create_vector(dimension)), m_iterations(0) {}
 
-        template<typename Observer = DummyPowerMethodObserver<PowerMethod>>
         void compute(LinearOperator &op) {
             m_converged = false;
             m_iterations = 0;
@@ -96,9 +92,8 @@ namespace itesol {
             }
         }
 
-        template<typename Observer = DummyPowerMethodObserver<PowerMethod>>
-        void compute(typename Allocator::MatrixCRef &A) {
-            LinearOperator op = [&A](VectorCRef x, VectorRef y) {
+        void compute(CRef<Matrix>& A) {
+            LinearOperator op = [&A](CRef<Vector> x, Ref<Vector> y) {
                 y = A * x;
             };
             compute(op);
