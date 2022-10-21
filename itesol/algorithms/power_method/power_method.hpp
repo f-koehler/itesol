@@ -115,10 +115,12 @@ namespace itesol {
 
         const Scalar &get_eigenvalue() const { return m_rayleigh_quotient; }
 
+        CRef<Vector> get_eigenvector() const { return m_eigenvector; }
+
         const Scalar &get_residual() const { return m_residual; }
 
         Index get_iterations() const { return m_iterations; }
     };
 } // namespace itesol
 
-#endif // ITESOL_POWER_METHOD_HPP
+#endif // ITESOL_ALGORITHMS_POWER_METHOD_POWER_METHOD_HPP
