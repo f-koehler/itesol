@@ -3,7 +3,6 @@
 
 #include <utility>
 #include <functional>
-#include <iostream>
 #include <vector>
 
 #include <Eigen/Dense>
@@ -34,7 +33,7 @@ namespace itesol {
     };
 
     template<typename PowerMethod>
-    class DummyPowerMethodObserver;
+    class PowerMethodObserver;
 
     template<typename AllocatorT>
     class PowerMethod {
@@ -45,6 +44,7 @@ namespace itesol {
         using Vector = typename Allocator::Vector;
         using Matrix = typename Allocator::Matrix;
         using LinearOperator = std::function<void(CRef<Vector>, Ref<Vector>)>;
+        using Observer = PowerMethodObserver<PowerMethod>;
 
     private:
         Index m_dimension;
@@ -59,16 +59,10 @@ namespace itesol {
         Vector m_new_eigenvector;
         Index m_iterations;
 
-    public:
-        explicit PowerMethod(Index dimension, Allocator &&allocator, Index max_iterations = 1000,
-                             Scalar tolerance = 1e-10)
-                : m_dimension(dimension), m_allocator(std::move(allocator)), m_max_iterations(max_iterations),
-                  m_tolerance(tolerance),
-                  m_converged(false), m_rayleigh_quotient(0), m_residual(0),
-                  m_eigenvector(m_allocator.create_random_vector(dimension)),
-                  m_new_eigenvector(m_allocator.create_vector(dimension)), m_iterations(0) {}
+    protected:
+        virtual void compute_impl(LinearOperator &op, Observer& observer) {
+            observer.start(*this);
 
-        void compute(LinearOperator &op) {
             m_converged = false;
             m_iterations = 0;
 
@@ -79,17 +73,38 @@ namespace itesol {
                 m_rayleigh_quotient = m_eigenvector.adjoint() * m_new_eigenvector;
 
                 m_residual = (m_new_eigenvector - m_rayleigh_quotient * m_eigenvector).norm();
-                std::cout << m_residual << '\n';
                 m_eigenvector = m_new_eigenvector;
                 m_eigenvector.normalize();
 
                 ++m_iterations;
+
+                observer.observe(*this);
 
                 if (m_residual < m_tolerance) {
                     m_converged = true;
                     break;
                 }
             }
+
+            observer.finish(*this);
+        }
+
+    public:
+        explicit PowerMethod(Index dimension, Allocator &&allocator, Index max_iterations = 1000,
+                             Scalar tolerance = 1e-10)
+                : m_dimension(dimension), m_allocator(std::move(allocator)), m_max_iterations(max_iterations),
+                  m_tolerance(tolerance),
+                  m_converged(false), m_rayleigh_quotient(0), m_residual(0),
+                  m_eigenvector(m_allocator.create_random_vector(dimension)),
+                  m_new_eigenvector(m_allocator.create_vector(dimension)), m_iterations(0) {}
+
+        void compute(LinearOperator &op) {
+            auto observer = Observer{};
+            compute_impl(op, observer);
+        }
+
+        void compute(LinearOperator &op, Observer& observer) {
+            compute_impl(op, observer);
         }
 
         void compute(CRef<Matrix>& A) {
@@ -97,6 +112,13 @@ namespace itesol {
                 y = A * x;
             };
             compute(op);
+        }
+
+        void compute(CRef<Matrix>& A, Observer& observer) {
+            LinearOperator op = [&A](CRef<Vector> x, Ref<Vector> y) {
+                y = A * x;
+            };
+            compute(op, observer);
         }
 
         Index get_dimension() const { return m_dimension; }
@@ -150,7 +172,7 @@ namespace itesol {
     };
 
     template<typename PowerMethodT>
-    class DebugPowerMethodObserver : public QuietPowerMethodObserver<PowerMethodT> {
+    class VerbosePowerMethodObserver : public QuietPowerMethodObserver<PowerMethodT> {
     public:
         using PowerMethod = PowerMethodT;
         using ParentClass = QuietPowerMethodObserver<PowerMethod>;
@@ -171,12 +193,12 @@ namespace itesol {
 
         void finish(const PowerMethod &power_method) override {
             ParentClass::finish(power_method);
+
             if (power_method.is_converged()) {
                 spdlog::info("Power method converged after {} iterations.", power_method.get_iterations());
             } else {
                 spdlog::error("Power method did not converge after {} iterations!", power_method.get_iterations());
             }
-            spdlog::info("\tEigenvalue: {}", power_method.get_eigenvalue());
         }
     };
 }
