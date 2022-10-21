@@ -1,0 +1,12 @@
+BasedOnStyle: LLVM
+IndentWidth: 4
+
+Language: Cpp
+Standard: c++17
+AlignTrailingComments: true
+AlwaysBreakTemplateDeclarations: Yes
+Cpp11BracedListStyle: true
+NamespaceIndentation: All
+PackConstructorInitializers: Never
+SpaceAfterTemplateKeyword: true
+SortIncludes: CaseSensitive

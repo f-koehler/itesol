@@ -93,8 +93,20 @@ jobs:
         with:
           submodules: true
       - name: Install compiler.
-        run: sudo apt-get install -yq ${{ matrix.toolchain.dependencies }}
+        run: sudo apt-get install -yq ${{ matrix.toolchain.dependencies }} cmake
       - name: Configure CMake project.
         run: CC=${{ matrix.toolchain.cc }} CXX=${{ matrix.toolchain.cxx }} cmake -B build
       - name: Build CMake project.
         run: cmake --build build
+  lint:
+    name: Linting
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout repository.
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Install linters.
+        run: sudo apt-get install -yq cmake clang-14 clang-tidy-14 clang-format-14 cppcheck cpplint
+      - name: Configure CMake project.
+        run: CC=${{ matrix.toolchain.cc }} CXX=${{ matrix.toolchain.cxx }} cmake -B build

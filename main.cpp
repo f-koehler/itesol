@@ -1,7 +1,5 @@
-#include <random>
-#include <iostream>
-#include <cmath>
 #include <cstdlib>
+#include <random>
 
 #include <Eigen/Dense>
 
@@ -26,13 +24,16 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
         A(i, i) = dist(prng);
     }
 
-    itesol::PowerMethod<itesol::EigenDenseAllocator<double>> power_method(size, itesol::EigenDenseAllocator<double>());
-    auto observer = itesol::VerbosePowerMethodObserver<decltype(power_method)>();
+    itesol::PowerMethod<itesol::EigenDenseAllocator<double>> power_method(
+        size, itesol::EigenDenseAllocator<double>());
+    auto observer =
+        itesol::VerbosePowerMethodObserver<decltype(power_method)>();
     power_method.compute(A, observer);
 
     Eigen::SelfAdjointEigenSolver<Matrix> solver;
     solver.compute(A);
-    spdlog::info("Correct eigenvalue: {}", solver.eigenvalues().cwiseAbs().maxCoeff());
+    spdlog::info("Correct eigenvalue: {}",
+                 solver.eigenvalues().cwiseAbs().maxCoeff());
 
     return EXIT_SUCCESS;
 }
