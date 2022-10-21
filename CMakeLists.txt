@@ -20,7 +20,7 @@ if(NOT itesol_ipo_supported)
     message(WARNING "IPO is not supported: ${itesol_ipo_output}")
 endif()
 
-add_executable(itesol main.cpp itesol/power_method.hpp)
+add_executable(itesol main.cpp itesol/algorithms/power_method/power_method.hpp)
 target_link_libraries(itesol PRIVATE Eigen3::Eigen)
 target_link_libraries(itesol PRIVATE fmt::fmt)
 target_link_libraries(itesol PRIVATE spdlog::spdlog)

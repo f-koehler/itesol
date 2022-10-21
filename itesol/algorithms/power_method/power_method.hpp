@@ -1,31 +1,16 @@
-#ifndef ITESOL_POWER_METHOD_HPP
-#define ITESOL_POWER_METHOD_HPP
+#ifndef ITESOL_ALGORITHMS_POWER_METHOD_POWER_METHOD_HPP
+#define ITESOL_ALGORITHMS_POWER_METHOD_POWER_METHOD_HPP
 
 #include <functional>
 #include <utility>
 #include <vector>
 
-#include <Eigen/Dense>
-#include <spdlog/spdlog.h>
+#include "Eigen/Dense"
+#include "spdlog/spdlog.h"
 
-#include "eigen.hpp"
+#include "../../eigen.hpp"
 
 namespace itesol {
-    template <typename ScalarT>
-    class EigenDenseAllocator {
-      public:
-        using Scalar = ScalarT;
-        using Index = int;
-        using Matrix = Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic>;
-        using Vector = Eigen::Matrix<Scalar, Eigen::Dynamic, 1>;
-
-        Vector create_vector(Index rows) { return Vector(rows); }
-
-        Vector create_zero_vector(Index rows) { return Vector::Zero(rows); }
-
-        Vector create_random_vector(Index rows) { return Vector::Random(rows); }
-    };
-
     template <typename PowerMethod>
     class PowerMethodObserver;
 
@@ -133,74 +118,6 @@ namespace itesol {
         const Scalar &get_residual() const { return m_residual; }
 
         Index get_iterations() const { return m_iterations; }
-    };
-
-    template <typename PowerMethodT>
-    class PowerMethodObserver {
-      public:
-        using PowerMethod = PowerMethodT;
-
-        virtual ~PowerMethodObserver() = default;
-
-        virtual void reset() {}
-
-        virtual void start([[maybe_unused]] const PowerMethod &power_method) {}
-
-        virtual void observe([[maybe_unused]] const PowerMethod &power_method) {
-        }
-
-        virtual void finish([[maybe_unused]] const PowerMethod &power_method) {}
-    };
-
-    template <typename PowerMethodT>
-    class QuietPowerMethodObserver : public PowerMethodObserver<PowerMethodT> {
-      public:
-        using PowerMethod = PowerMethodT;
-        using ParentClass = PowerMethodObserver<PowerMethod>;
-        using Scalar = typename PowerMethod::Scalar;
-        using Index = typename PowerMethod::Index;
-
-      protected:
-        std::vector<Scalar> m_residuals;
-        std::vector<Scalar> m_eigenvalues;
-        bool m_converged;
-        Index m_iterations;
-    };
-
-    template <typename PowerMethodT>
-    class VerbosePowerMethodObserver
-        : public QuietPowerMethodObserver<PowerMethodT> {
-      public:
-        using PowerMethod = PowerMethodT;
-        using ParentClass = QuietPowerMethodObserver<PowerMethod>;
-
-        void start(const PowerMethod &power_method) override {
-            ParentClass::start(power_method);
-
-            spdlog::info("Starting power method with dimension {} …",
-                         power_method.get_dimension());
-        }
-
-        void observe(const PowerMethod &power_method) override {
-            ParentClass::observe(power_method);
-
-            spdlog::info("Iteration: {}", power_method.get_iterations());
-            spdlog::info("\tEigenvalue: {}", power_method.get_eigenvalue());
-            spdlog::info("\tResidual: {}", power_method.get_residual());
-        }
-
-        void finish(const PowerMethod &power_method) override {
-            ParentClass::finish(power_method);
-
-            if (power_method.is_converged()) {
-                spdlog::info("Power method converged after {} iterations.",
-                             power_method.get_iterations());
-            } else {
-                spdlog::error(
-                    "Power method did not converge after {} iterations!",
-                    power_method.get_iterations());
-            }
-        }
     };
 } // namespace itesol
 

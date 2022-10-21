@@ -3,7 +3,7 @@
 
 #include <Eigen/Dense>
 
-#include "itesol/power_method.hpp"
+#include "itesol/algorithms/power_method.hpp"
 
 using Real = double;
 using Matrix = Eigen::Matrix<Real, Eigen::Dynamic, Eigen::Dynamic>;

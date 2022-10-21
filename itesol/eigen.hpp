@@ -34,6 +34,22 @@ namespace itesol {
     template <typename T>
     using CRef = typename std::enable_if<IsEigenDense<T>::value,
                                          const Eigen::Ref<const T> &>::type;
+
+    template <typename ScalarT>
+    class EigenDenseAllocator {
+      public:
+        using Scalar = ScalarT;
+        using Index = int;
+        using Matrix = Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic>;
+        using Vector = Eigen::Matrix<Scalar, Eigen::Dynamic, 1>;
+
+        Vector create_vector(Index rows) { return Vector(rows); }
+
+        Vector create_zero_vector(Index rows) { return Vector::Zero(rows); }
+
+        Vector create_random_vector(Index rows) { return Vector::Random(rows); }
+    };
+
 } // namespace itesol
 
 #endif // ITESOL_EIGEN_HPP
