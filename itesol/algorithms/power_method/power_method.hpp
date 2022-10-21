@@ -22,7 +22,6 @@ namespace itesol {
         using Scalar = typename Allocator::Scalar;
         using Vector = typename Allocator::Vector;
         using Matrix = typename Allocator::Matrix;
-        using LinearOperator = std::function<void(CRef<Vector>, Ref<Vector>)>;
         using Observer = PowerMethodObserver<PowerMethod>;
 
       private:
@@ -39,7 +38,8 @@ namespace itesol {
         Index m_iterations;
 
       protected:
-        virtual void compute_impl(LinearOperator &op, Observer &observer) {
+        virtual void compute_impl(const LinearOperator<Vector> &op,
+                                  Observer &observer) {
             observer.start(*this);
 
             m_converged = false;
@@ -86,27 +86,13 @@ namespace itesol {
               m_new_eigenvector(m_allocator.create_vector(dimension)),
               m_iterations(0) {}
 
-        void compute(LinearOperator &op) {
+        void compute(const LinearOperator<Vector> &op) {
             auto observer = Observer{};
             compute_impl(op, observer);
         }
 
-        void compute(LinearOperator &op, Observer &observer) {
+        void compute(const LinearOperator<Vector> &op, Observer &observer) {
             compute_impl(op, observer);
-        }
-
-        void compute(CRef<Matrix> &A) {
-            LinearOperator op = [&A](CRef<Vector> x, Ref<Vector> y) {
-                y = A * x;
-            };
-            compute(op);
-        }
-
-        void compute(CRef<Matrix> &A, Observer &observer) {
-            LinearOperator op = [&A](CRef<Vector> x, Ref<Vector> y) {
-                y = A * x;
-            };
-            compute(op, observer);
         }
 
         Index get_dimension() const { return m_dimension; }

@@ -28,7 +28,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
         size, itesol::EigenDenseAllocator<double>());
     auto observer =
         itesol::VerbosePowerMethodObserver<decltype(power_method)>();
-    power_method.compute(A, observer);
+    power_method.compute(itesol::make_linear_operator<Matrix>(A), observer);
 
     Eigen::SelfAdjointEigenSolver<Matrix> solver;
     solver.compute(A);

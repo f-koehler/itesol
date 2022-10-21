@@ -24,8 +24,23 @@ namespace itesol {
         : public std::true_type {};
 
     template <typename T>
+    class IsEigenDenseMatrix : public std::false_type {};
+
+    template <typename Scalar, int Rows, int Columns, int Options, int MaxRows,
+              int MaxColumns>
+    class IsEigenDenseMatrix<
+        Eigen::Matrix<Scalar, Rows, Columns, Options, MaxRows, MaxColumns>>
+        : public std::true_type {};
+
+    template <typename T>
     using ScalarType = typename std::enable_if<IsEigenDense<T>::value,
                                                typename T::Scalar>::type;
+
+    template <typename T>
+    using VectorType = typename std::enable_if<
+        IsEigenDenseMatrix<T>::value,
+        Eigen::Matrix<typename T::Scalar, T::RowsAtCompileTime, 1, T::Options,
+                      T::MaxRowsAtCompileTime, 1>>::type;
 
     template <typename T>
     using Ref =
@@ -34,6 +49,19 @@ namespace itesol {
     template <typename T>
     using CRef = typename std::enable_if<IsEigenDense<T>::value,
                                          const Eigen::Ref<const T> &>::type;
+
+    template <typename T>
+    using LinearOperator =
+        typename std::enable_if<IsEigenDenseVector<T>::value,
+                                std::function<void(CRef<T>, Ref<T>)>>::type;
+
+    template <typename Matrix>
+    typename std::enable_if<IsEigenDenseMatrix<Matrix>::value,
+                            LinearOperator<VectorType<Matrix>>>::type
+    make_linear_operator(CRef<Matrix> matrix) {
+        return [&matrix](CRef<VectorType<Matrix>> x,
+                         Ref<VectorType<Matrix>> y) { y = matrix * x; };
+    }
 
     template <typename ScalarT>
     class EigenDenseAllocator {
