@@ -1,0 +1,8 @@
+//
+// Created by Fabian Köhler on 23.10.22.
+//
+
+#ifndef ITESOL_BACKENDS_EIGEN_DENSE_HPP
+#define ITESOL_BACKENDS_EIGEN_DENSE_HPP
+
+#endif //ITESOL_BACKENDS_EIGEN_DENSE_HPP
