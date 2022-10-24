@@ -8,25 +8,26 @@
 #include "Eigen/Dense"
 #include "spdlog/spdlog.h"
 
+#include "../../backends/concept.hpp"
 #include "../../eigen.hpp"
 
 namespace itesol {
     template <typename PowerMethod>
     class PowerMethodObserver;
 
-    template <typename AllocatorT>
+    template <backends::Backend BackendT>
     class PowerMethod {
       public:
-        using Allocator = AllocatorT;
-        using Index = typename Allocator::Index;
-        using Scalar = typename Allocator::Scalar;
-        using Vector = typename Allocator::Vector;
-        using Matrix = typename Allocator::Matrix;
+        using Backend = BackendT;
+        using Index = typename Backend::Index;
+        using Scalar = typename Backend::Scalar;
+        using Vector = typename Backend::Vector;
+        using Matrix = typename Backend::Matrix;
         using Observer = PowerMethodObserver<PowerMethod>;
 
       private:
         Index m_dimension;
-        Allocator m_allocator;
+        Backend m_backend;
         Index m_max_iterations;
         Scalar m_tolerance;
 
@@ -72,18 +73,18 @@ namespace itesol {
         }
 
       public:
-        explicit PowerMethod(Index dimension, Allocator &&allocator,
+        explicit PowerMethod(Index dimension, Backend &&backend,
                              Index max_iterations = 1000,
                              Scalar tolerance = 1e-10)
             : m_dimension(dimension),
-              m_allocator(std::move(allocator)),
+              m_backend(std::move(backend)),
               m_max_iterations(max_iterations),
               m_tolerance(tolerance),
               m_converged(false),
               m_rayleigh_quotient(0),
               m_residual(0),
-              m_eigenvector(m_allocator.create_random_vector(dimension)),
-              m_new_eigenvector(m_allocator.create_vector(dimension)),
+              m_eigenvector(m_backend.create_random_vector(dimension)),
+              m_new_eigenvector(m_backend.create_vector(dimension)),
               m_iterations(0) {}
 
         void compute(const LinearOperator<Vector> &op) {
