@@ -3,7 +3,7 @@
 
 #include <utility>
 
-#include <Eigen/Dense>
+#include "Eigen/Dense"
 
 namespace itesol {
     template <typename T>

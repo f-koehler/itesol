@@ -63,6 +63,9 @@ jobs:
         run: CC=${{ matrix.toolchain.cc }} CXX=${{ matrix.toolchain.cxx }} cmake -B build
       - name: Build CMake project.
         run: cmake --build build
+      - name: Run tests.
+        working-directory: build/tests
+        run: ctest
   lint:
     name: Linting
     runs-on: ubuntu-22.04
