@@ -5,11 +5,9 @@
 #include <utility>
 #include <vector>
 
-#include "Eigen/Dense"
 #include "spdlog/spdlog.h"
 
 #include "../../backends/concept.hpp"
-#include "../../eigen.hpp"
 
 namespace itesol {
     template <typename PowerMethod>
@@ -22,7 +20,9 @@ namespace itesol {
         using Index = typename Backend::Index;
         using Scalar = typename Backend::Scalar;
         using Vector = typename Backend::Vector;
+        using VectorCRef = typename Backend::VectorCRef;
         using Matrix = typename Backend::Matrix;
+        using LinearOperator = typename Backend::LinearOperator;
         using Observer = PowerMethodObserver<PowerMethod>;
 
       private:
@@ -39,7 +39,7 @@ namespace itesol {
         Index m_iterations;
 
       protected:
-        virtual void compute_impl(const LinearOperator<Vector> &op,
+        virtual void compute_impl(const LinearOperator &op,
                                   Observer &observer) {
             observer.start(*this);
 
@@ -73,11 +73,11 @@ namespace itesol {
         }
 
       public:
-        explicit PowerMethod(Index dimension, Backend &&backend,
+        explicit PowerMethod(Index dimension, const Backend &backend,
                              Index max_iterations = 1000,
                              Scalar tolerance = 1e-10)
             : m_dimension(dimension),
-              m_backend(std::move(backend)),
+              m_backend(backend),
               m_max_iterations(max_iterations),
               m_tolerance(tolerance),
               m_converged(false),
@@ -87,12 +87,12 @@ namespace itesol {
               m_new_eigenvector(m_backend.create_vector(dimension)),
               m_iterations(0) {}
 
-        void compute(const LinearOperator<Vector> &op) {
+        void compute(const LinearOperator &op) {
             auto observer = Observer{};
             compute_impl(op, observer);
         }
 
-        void compute(const LinearOperator<Vector> &op, Observer &observer) {
+        void compute(const LinearOperator &op, Observer &observer) {
             compute_impl(op, observer);
         }
 
@@ -102,7 +102,7 @@ namespace itesol {
 
         const Scalar &get_eigenvalue() const { return m_rayleigh_quotient; }
 
-        CRef<Vector> get_eigenvector() const { return m_eigenvector; }
+        VectorCRef get_eigenvector() const { return m_eigenvector; }
 
         const Scalar &get_residual() const { return m_residual; }
 

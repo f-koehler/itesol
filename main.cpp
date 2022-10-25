@@ -4,14 +4,17 @@
 #include <Eigen/Dense>
 
 #include <itesol/algorithms/power_method.hpp>
-#include <itesol/backends/concept.hpp>
+#include <itesol/backends/eigen_dense.hpp>
 
 using Real = double;
-using Matrix = Eigen::Matrix<Real, Eigen::Dynamic, Eigen::Dynamic>;
-using Vector = Eigen::Matrix<Real, Eigen::Dynamic, 1>;
+using Backend = itesol::backends::EigenDense<Real>;
+using Matrix = typename Backend::Matrix;
+using Vector = typename Backend::Vector;
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
     const int size = 128;
+
+    Backend backend;
 
     std::uniform_real_distribution<Real> dist(0.0, 1.0);
     std::mt19937_64 prng(0);
@@ -25,11 +28,10 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
         A(i, i) = dist(prng);
     }
 
-    itesol::PowerMethod<itesol::EigenDenseAllocator<double>> power_method(
-        size, itesol::EigenDenseAllocator<double>());
+    itesol::PowerMethod<Backend> power_method(size, backend);
     auto observer =
         itesol::VerbosePowerMethodObserver<decltype(power_method)>();
-    power_method.compute(itesol::make_linear_operator<Matrix>(A), observer);
+    power_method.compute(backend.make_linear_operator(A), observer);
 
     Eigen::SelfAdjointEigenSolver<Matrix> solver;
     solver.compute(A);
