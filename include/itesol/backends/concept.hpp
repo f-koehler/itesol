@@ -43,15 +43,6 @@ namespace itesol::backends {
                     std::declval<typename T::VectorRef>())
             } -> std::same_as<void>;
     };
-
-    template <typename T>
-    concept HasComputeResidual = Backend<T> &&requires(T t) {
-        {
-            t.compute_residual(std::declval<typename T::Scalar>(),
-                               std::declval<typename T::VectorCRef>(),
-                               std::declval<typename T::VectorRef>())
-            } -> std::same_as<typename T::Scalar>;
-    };
 } // namespace itesol::backends
 
 #endif // ITESOL_BACKENDS_CONCEPT_HPP
