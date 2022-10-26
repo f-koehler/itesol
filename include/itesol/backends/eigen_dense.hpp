@@ -32,6 +32,16 @@ namespace itesol::backends {
         }
 
         Scalar dotc(VectorCRef x, VectorCRef y) { return x.adjoint() * y; }
+        RealScalar norm(VectorCRef x) { return x.norm(); }
+
+        void a_x_plus_y(const Scalar &alpha, VectorCRef x, VectorRef y) {
+            y += alpha * x;
+        }
+
+        void x_plus_a_y(const Scalar &alpha, VectorCRef x, VectorRef y) {
+            y *= alpha;
+            y += x;
+        }
 
         void scale(Scalar alpha, VectorRef x) { x *= alpha; }
         void normalize(VectorRef x) { x.normalize(); }
