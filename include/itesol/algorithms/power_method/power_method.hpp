@@ -46,9 +46,9 @@ namespace itesol {
             m_converged = false;
             m_iterations = 0;
 
-            m_backend.normalize(m_eigenvector);
-
             for (Index i = 0; i < m_max_iterations; ++i) {
+                m_backend.normalize(m_eigenvector);
+
                 op(m_eigenvector, m_new_eigenvector);
 
                 m_rayleigh_quotient =
@@ -59,7 +59,6 @@ namespace itesol {
                         .norm();
 
                 m_eigenvector = m_new_eigenvector;
-                m_backend.normalize(m_eigenvector);
 
                 ++m_iterations;
 
