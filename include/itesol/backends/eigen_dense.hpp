@@ -30,7 +30,7 @@ namespace itesol::backends {
 
         Scalar dotc(VectorCRef x, VectorCRef y) { return x.adjoint() * y; }
 
-        void scale(VectorRef x, Scalar alpha) { x *= alpha; }
+        void scale(Scalar alpha, VectorRef x) { x *= alpha; }
     };
 } // namespace itesol::backends
 

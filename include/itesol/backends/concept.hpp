@@ -4,6 +4,7 @@
 #include <concepts>
 #include <functional>
 #include <type_traits>
+#include <utility>
 
 namespace itesol::backends {
 
@@ -23,19 +24,24 @@ namespace itesol::backends {
         typename T::LinearOperator;
 
         {
-            t.create_vector(typename T::Index())
+            t.create_vector(std::declval<typename T::Index>())
             } -> std::same_as<typename T::Vector>;
         {
-            t.create_zero_vector(typename T::Index())
+            t.create_zero_vector(std::declval<typename T::Index>())
             } -> std::same_as<typename T::Vector>;
         {
-            t.create_random_vector(typename T::Index())
+            t.create_random_vector(std::declval<typename T::Index>())
             } -> std::same_as<typename T::Vector>;
 
         {
-            t.dotc(typename T::VectorCRef(typename T::Vector()),
-                   typename T::VectorCRef(typename T::Vector()))
+            t.dotc(std::declval<typename T::VectorCRef>(),
+                   std::declval<typename T::VectorCRef>())
             } -> std::same_as<typename T::Scalar>;
+
+        {
+            t.scale(std::declval<typename T::Scalar>(),
+                    std::declval<typename T::VectorRef>())
+            } -> std::same_as<void>;
     };
 
     //    template <typename T>
