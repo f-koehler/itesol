@@ -50,8 +50,9 @@ namespace itesol {
 
             for (Index i = 0; i < m_max_iterations; ++i) {
                 op(m_eigenvector, m_new_eigenvector);
+
                 m_rayleigh_quotient =
-                    m_eigenvector.adjoint() * m_new_eigenvector;
+                    m_backend.dotc(m_eigenvector, m_new_eigenvector);
 
                 m_residual =
                     (m_new_eigenvector - m_rayleigh_quotient * m_eigenvector)

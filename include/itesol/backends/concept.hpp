@@ -6,6 +6,7 @@
 #include <type_traits>
 
 namespace itesol::backends {
+
     template <typename T>
     concept Backend = requires(T t) {
         typename T::Scalar;
@@ -30,7 +31,21 @@ namespace itesol::backends {
         {
             t.create_random_vector(typename T::Index())
             } -> std::same_as<typename T::Vector>;
+
+        {
+            t.dotc(typename T::VectorCRef(typename T::Vector()),
+                   typename T::VectorCRef(typename T::Vector()))
+            } -> std::same_as<typename T::Scalar>;
     };
+
+    //    template <typename T>
+    //    concept HasComputeResidual = Backend<T> && requires(T t) {
+    //        {
+    //            t.compute_residual(typename const T::Scalar&(), typename
+    //            T::VectorCRef(typename T::Vector()), typename
+    //            T::VectorCRef(typename T::Vector()))
+    //        } -> std::same_as<typename T::Scalar>;
+    //    };
 } // namespace itesol::backends
 
 #endif // ITESOL_BACKENDS_CONCEPT_HPP

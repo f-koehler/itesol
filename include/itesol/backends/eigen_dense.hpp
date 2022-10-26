@@ -27,6 +27,10 @@ namespace itesol::backends {
         LinearOperator make_linear_operator(MatrixCRef matrix) {
             return [&matrix](VectorCRef x, VectorRef y) { y = matrix * x; };
         }
+
+        Scalar dotc(VectorCRef x, VectorCRef y) { return x.adjoint() * y; }
+
+        void scale(VectorRef x, Scalar alpha) { x *= alpha; }
     };
 } // namespace itesol::backends
 
