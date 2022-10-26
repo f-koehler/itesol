@@ -9,7 +9,7 @@
 namespace itesol::backends {
 
     template <typename T>
-    concept Backend = requires(T t) {
+    concept IsBackend = requires(T t) {
         typename T::Scalar;
         typename T::RealScalar;
         typename T::Index;

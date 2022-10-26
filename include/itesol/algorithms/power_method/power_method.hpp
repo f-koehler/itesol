@@ -13,7 +13,7 @@ namespace itesol {
     template <typename PowerMethod>
     class PowerMethodObserver;
 
-    template <backends::Backend BackendT>
+    template <backends::IsBackend BackendT>
     class PowerMethod {
       public:
         using Backend = BackendT;

@@ -3,7 +3,8 @@
 #include <itesol/backends/concept.hpp>
 #include <itesol/backends/eigen_dense.hpp>
 
-TEMPLATE_TEST_CASE("EigenDense fulfills Backend concept", "[backends]", float,
+TEMPLATE_TEST_CASE("EigenDense fulfills IsBackend concept", "[backends]", float,
                    double, std::complex<float>, std::complex<double>) {
-    REQUIRE(itesol::backends::Backend<itesol::backends::EigenDense<TestType>>);
+    REQUIRE(
+        itesol::backends::IsBackend<itesol::backends::EigenDense<TestType>>);
 }
