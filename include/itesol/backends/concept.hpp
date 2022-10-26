@@ -40,6 +40,10 @@ namespace itesol::backends {
             } -> std::same_as<typename T::Scalar>;
 
         {
+            t.norm(std::declval<typename T::VectorCRef>())
+            } -> std::same_as<typename T::RealScalar>;
+
+        {
             t.scale(std::declval<typename T::Scalar>(),
                     std::declval<typename T::VectorRef>())
             } -> std::same_as<void>;
