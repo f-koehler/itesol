@@ -3,11 +3,14 @@
 
 #include "Eigen/Dense"
 
+#include "../type_traits.hpp"
+
 namespace itesol::backends {
     template <typename ScalarT>
     class EigenDense {
       public:
         using Scalar = ScalarT;
+        using RealScalar = RealType<Scalar>;
         using Index = int;
 
         using Matrix = Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic>;
@@ -31,6 +34,7 @@ namespace itesol::backends {
         Scalar dotc(VectorCRef x, VectorCRef y) { return x.adjoint() * y; }
 
         void scale(Scalar alpha, VectorRef x) { x *= alpha; }
+        void normalize(VectorRef x) { x.normalize(); }
     };
 } // namespace itesol::backends
 

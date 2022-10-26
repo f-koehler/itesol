@@ -46,7 +46,7 @@ namespace itesol {
             m_converged = false;
             m_iterations = 0;
 
-            m_eigenvector.normalize();
+            m_backend.normalize(m_eigenvector);
 
             for (Index i = 0; i < m_max_iterations; ++i) {
                 op(m_eigenvector, m_new_eigenvector);
@@ -59,7 +59,7 @@ namespace itesol {
                         .norm();
 
                 m_eigenvector = m_new_eigenvector;
-                m_eigenvector.normalize();
+                m_backend.normalize(m_eigenvector);
 
                 ++m_iterations;
 

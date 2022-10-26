@@ -11,6 +11,7 @@ namespace itesol::backends {
     template <typename T>
     concept Backend = requires(T t) {
         typename T::Scalar;
+        typename T::RealScalar;
         typename T::Index;
 
         typename T::Vector;
@@ -41,6 +42,10 @@ namespace itesol::backends {
         {
             t.scale(std::declval<typename T::Scalar>(),
                     std::declval<typename T::VectorRef>())
+            } -> std::same_as<void>;
+
+        {
+            t.normalize(std::declval<typename T::VectorRef>())
             } -> std::same_as<void>;
     };
 } // namespace itesol::backends
