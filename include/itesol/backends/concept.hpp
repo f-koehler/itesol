@@ -44,14 +44,14 @@ namespace itesol::backends {
             } -> std::same_as<void>;
     };
 
-    //    template <typename T>
-    //    concept HasComputeResidual = Backend<T> && requires(T t) {
-    //        {
-    //            t.compute_residual(typename const T::Scalar&(), typename
-    //            T::VectorCRef(typename T::Vector()), typename
-    //            T::VectorCRef(typename T::Vector()))
-    //        } -> std::same_as<typename T::Scalar>;
-    //    };
+    template <typename T>
+    concept HasComputeResidual = Backend<T> &&requires(T t) {
+        {
+            t.compute_residual(std::declval<typename T::Scalar>(),
+                               std::declval<typename T::VectorCRef>(),
+                               std::declval<typename T::VectorRef>())
+            } -> std::same_as<typename T::Scalar>;
+    };
 } // namespace itesol::backends
 
 #endif // ITESOL_BACKENDS_CONCEPT_HPP

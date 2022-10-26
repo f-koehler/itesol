@@ -54,9 +54,15 @@ namespace itesol {
                 m_rayleigh_quotient =
                     m_backend.dotc(m_eigenvector, m_new_eigenvector);
 
-                m_residual =
-                    (m_new_eigenvector - m_rayleigh_quotient * m_eigenvector)
-                        .norm();
+                if constexpr (backends::HasComputeResidual<Backend>) {
+                    m_residual = m_backend.compute_residual(
+                        m_rayleigh_quotient, m_new_eigenvector, m_eigenvector);
+                } else {
+                    m_residual = (m_new_eigenvector -
+                                  m_rayleigh_quotient * m_eigenvector)
+                                     .norm();
+                }
+
                 m_eigenvector = m_new_eigenvector;
                 m_eigenvector.normalize();
 
