@@ -46,7 +46,7 @@ namespace itesol {
             m_converged = false;
             m_iterations = 0;
 
-            for (Index i = 0; i < m_max_iterations; ++i) {
+            while (true) {
                 m_backend.normalize(m_eigenvector);
 
                 op(m_eigenvector, m_new_eigenvector);
@@ -66,6 +66,11 @@ namespace itesol {
 
                 if (m_residual < m_tolerance) {
                     m_converged = true;
+                    break;
+                }
+
+                if ((m_max_iterations > Index(0)) &&
+                    (m_iterations >= m_max_iterations)) {
                     break;
                 }
             }
