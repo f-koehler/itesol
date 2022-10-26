@@ -3,7 +3,7 @@
 
 #include "Eigen/Dense"
 
-#include "../type_traits.hpp"
+#include "../concepts.hpp"
 
 namespace itesol::backends {
     template <typename ScalarT>

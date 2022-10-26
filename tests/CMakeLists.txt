@@ -4,7 +4,7 @@ enable_testing()
 
 add_executable(itesol_test
         tests.cpp
-        type_traits.cpp
+        concepts.cpp
         backends/eigen_dense.cpp
 )
 include_directories(itesol_test PRIVATE ${CMAKE_SOURCE_DIR}/include)

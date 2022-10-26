@@ -2,19 +2,12 @@
 
 #include <tuple>
 
-#include <itesol/type_traits.hpp>
+#include <itesol/concepts.hpp>
 
 TEMPLATE_TEST_CASE("IsComplex type trait", "[type_traits]", float, double) {
-    SECTION("Real types") {
-        REQUIRE(!itesol::IsComplex<TestType>::value);
-        REQUIRE(std::is_same_v<typename itesol::IsComplex<TestType>::RealType,
-                               TestType>);
-    }
+    SECTION("Real types") { REQUIRE(!itesol::IsComplex<TestType>); }
     SECTION("Complex types") {
-        REQUIRE(itesol::IsComplex<std::complex<TestType>>::value);
-        REQUIRE(std::is_same_v<
-                typename itesol::IsComplex<std::complex<TestType>>::RealType,
-                TestType>);
+        REQUIRE(itesol::IsComplex<std::complex<TestType>>);
     }
 }
 
