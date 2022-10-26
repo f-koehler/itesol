@@ -98,6 +98,13 @@ namespace itesol {
         }
 
         Index get_dimension() const { return m_dimension; }
+        const Backend &get_backend() const { return m_backend; }
+        Index get_max_iterations() const { return m_max_iterations; }
+        void set_max_iterations(const Index &max_iterations) {
+            m_max_iterations = max_iterations;
+        }
+        Scalar get_tolerance() const { return m_tolerance; }
+        void set_tolerance(const Scalar &tolerance) { m_tolerance = tolerance; }
 
         [[nodiscard]] bool is_converged() const { return m_converged; }
 
