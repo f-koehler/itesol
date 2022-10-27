@@ -52,6 +52,15 @@ namespace itesol::backends {
             t.normalize(std::declval<typename T::VectorRef>())
             } -> std::same_as<void>;
     };
+
+    namespace details {
+        template <typename T>
+        struct SupportsExpressionTemplates : std::false_type {};
+    } // namespace details
+
+    template <typename Backend>
+    concept SupportsExpressionTemplates = IsBackend<Backend>
+        &&details::SupportsExpressionTemplates<Backend>::value;
 } // namespace itesol::backends
 
 #endif // ITESOL_BACKENDS_CONCEPT_HPP

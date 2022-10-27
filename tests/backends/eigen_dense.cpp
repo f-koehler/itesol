@@ -7,4 +7,6 @@ TEMPLATE_TEST_CASE("EigenDense fulfills IsBackend concept", "[backends]", float,
                    double, std::complex<float>, std::complex<double>) {
     REQUIRE(
         itesol::backends::IsBackend<itesol::backends::EigenDense<TestType>>);
+    REQUIRE(itesol::backends::SupportsExpressionTemplates<
+            itesol::backends::EigenDense<TestType>>);
 }

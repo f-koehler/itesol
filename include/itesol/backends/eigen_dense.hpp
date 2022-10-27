@@ -46,6 +46,12 @@ namespace itesol::backends {
         void scale(Scalar alpha, VectorRef x) { x *= alpha; }
         void normalize(VectorRef x) { x.normalize(); }
     };
+
+    namespace details {
+        template <typename Scalar>
+        struct SupportsExpressionTemplates<EigenDense<Scalar>>
+            : std::true_type {};
+    } // namespace details
 } // namespace itesol::backends
 
 #endif // ITESOL_BACKENDS_EIGEN_DENSE_HPP
