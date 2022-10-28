@@ -121,7 +121,7 @@ namespace itesol {
 
         const Scalar &get_eigenvalue() const { return m_rayleigh_quotient; }
 
-        VectorCRef get_eigenvector() const { return m_eigenvector; }
+        VectorCRef get_eigenvector() const { return m_new_eigenvector; }
 
         const Scalar &get_residual() const { return m_residual; }
 
