@@ -4,6 +4,7 @@
 #include "Eigen/Dense"
 
 #include "../concepts.hpp"
+#include "concept.hpp"
 
 namespace itesol::backends {
     template <typename ScalarT>
