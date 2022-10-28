@@ -3,7 +3,7 @@
 
 #include "observer.hpp"
 
-namespace itesol {
+namespace itesol::algorithms {
     template <typename PowerMethodT>
     class QuietPowerMethodObserver : public PowerMethodObserver<PowerMethodT> {
       public:
@@ -18,6 +18,6 @@ namespace itesol {
         bool m_converged;
         Index m_iterations;
     };
-} // namespace itesol
+} // namespace itesol::algorithms
 
 #endif

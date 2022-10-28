@@ -3,7 +3,7 @@
 
 #include "quiet_observer.hpp"
 
-namespace itesol {
+namespace itesol::algorithms {
     template <typename PowerMethodT>
     class VerbosePowerMethodObserver
         : public QuietPowerMethodObserver<PowerMethodT> {
@@ -40,6 +40,6 @@ namespace itesol {
         }
     };
 
-} // namespace itesol
+} // namespace itesol::algorithms
 
 #endif

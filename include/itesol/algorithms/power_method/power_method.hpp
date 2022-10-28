@@ -9,7 +9,7 @@
 
 #include "../../backends/concept.hpp"
 
-namespace itesol {
+namespace itesol::algorithms {
     template <typename PowerMethod>
     class PowerMethodObserver;
 
@@ -131,6 +131,6 @@ namespace itesol {
             m_backend.copy(initial_vector, m_eigenvector);
         }
     };
-} // namespace itesol
+} // namespace itesol::algorithms
 
 #endif // ITESOL_ALGORITHMS_POWER_METHOD_POWER_METHOD_HPP

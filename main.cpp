@@ -28,9 +28,9 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
         A(i, i) = dist(prng);
     }
 
-    itesol::PowerMethod<Backend> power_method(size, backend);
-    auto observer =
-        itesol::VerbosePowerMethodObserver<decltype(power_method)>();
+    itesol::algorithms::PowerMethod<Backend> power_method(size, backend);
+    auto observer = itesol::algorithms::VerbosePowerMethodObserver<
+        decltype(power_method)>();
     power_method.compute(backend.make_linear_operator(A), observer);
 
     Eigen::SelfAdjointEigenSolver<Matrix> solver;

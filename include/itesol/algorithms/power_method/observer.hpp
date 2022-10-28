@@ -3,7 +3,7 @@
 
 #include "power_method.hpp"
 
-namespace itesol {
+namespace itesol::algorithms {
     template <typename PowerMethodT>
     class PowerMethodObserver {
       public:
@@ -20,6 +20,6 @@ namespace itesol {
 
         virtual void finish([[maybe_unused]] const PowerMethod &power_method) {}
     };
-} // namespace itesol
+} // namespace itesol::algorithms
 
 #endif
