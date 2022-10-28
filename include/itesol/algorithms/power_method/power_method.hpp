@@ -126,6 +126,10 @@ namespace itesol {
         const Scalar &get_residual() const { return m_residual; }
 
         Index get_iterations() const { return m_iterations; }
+
+        void set_initial_vector(VectorCRef initial_vector) {
+            m_backend.copy(initial_vector, m_eigenvector);
+        }
     };
 } // namespace itesol
 

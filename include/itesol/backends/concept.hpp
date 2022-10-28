@@ -51,6 +51,11 @@ namespace itesol::backends {
         {
             t.normalize(std::declval<typename T::VectorRef>())
             } -> std::same_as<void>;
+
+        {
+            t.copy(std::declval<typename T::VectorCRef>(),
+                   std::declval<typename T::VectorRef>())
+            } -> std::same_as<void>;
     };
 
     namespace details {

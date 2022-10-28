@@ -45,6 +45,7 @@ namespace itesol::backends {
 
         void scale(Scalar alpha, VectorRef x) { x *= alpha; }
         void normalize(VectorRef x) { x.normalize(); }
+        void copy(VectorCRef x, VectorRef y) { y = x; }
     };
 
     namespace details {
