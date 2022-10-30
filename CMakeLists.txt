@@ -16,7 +16,11 @@ add_subdirectory(dependencies/Catch2)
 
 # check if IPO is supported
 include(CheckIPOSupported)
-check_ipo_supported(RESULT itesol_ipo_supported OUTPUT itesol_ipo_output LANGUAGES CXX)
+check_ipo_supported(
+    RESULT itesol_ipo_supported
+    OUTPUT itesol_ipo_output
+    LANGUAGES CXX
+)
 if(NOT itesol_ipo_supported)
     message(WARNING "IPO is not supported: ${itesol_ipo_output}")
 endif()
