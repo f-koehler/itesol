@@ -13,3 +13,11 @@ repos:
     rev: v14.0.6
     hooks:
       - id: clang-format
+  - repo: https://github.com/cmake-lint/cmake-lint
+    rev: 1.4.2
+    hooks:
+    - id: cmakelint
+  - repo: https://github.com/BlankSpruce/gersemi
+    rev: 0.8.2
+    hooks:
+      - id: gersemi
