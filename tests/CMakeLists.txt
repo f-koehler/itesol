@@ -6,7 +6,7 @@ add_executable(itesol_test
         tests.cpp
         concepts.cpp
         backends/eigen_dense.cpp
-)
+        algorithms/power_method.cpp)
 include_directories(itesol_test PRIVATE ${CMAKE_SOURCE_DIR}/include)
 target_link_libraries(itesol_test PRIVATE Eigen3::Eigen)
 target_link_libraries(itesol_test PRIVATE fmt::fmt)
