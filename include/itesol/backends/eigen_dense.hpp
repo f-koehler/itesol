@@ -28,6 +28,13 @@ namespace itesol::backends {
         Vector create_zero_vector(Index rows) { return Vector::Zero(rows); }
         Vector create_random_vector(Index rows) { return Vector::Random(rows); }
 
+        Matrix create_matrix(Index rows, Index cols) {
+            return Matrix(rows, cols);
+        }
+        Matrix create_zero_matrix(Index rows, Index cols) {
+            return Matrix::Zero(rows, cols);
+        }
+
         LinearOperator make_linear_operator(MatrixCRef matrix) {
             return [&matrix](VectorCRef x, VectorRef y) { y = matrix * x; };
         }
