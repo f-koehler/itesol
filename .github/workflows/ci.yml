@@ -59,6 +59,8 @@ jobs:
           submodules: true
       - name: Install compiler.
         run: sudo apt-get install -yq ${{ matrix.toolchain.dependencies }} cmake
+      - name: Install OpenBLAS.
+        run: sudo apt-get install -yq libopenblas-base libopenblas-dev
       - name: Configure CMake project.
         run: CC=${{ matrix.toolchain.cc }} CXX=${{ matrix.toolchain.cxx }} cmake -B build
       - name: Build CMake project.

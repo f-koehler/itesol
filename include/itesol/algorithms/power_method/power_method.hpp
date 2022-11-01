@@ -66,7 +66,7 @@ namespace itesol::algorithms {
                     m_residual = m_backend.norm(m_eigenvector);
                 }
 
-                m_eigenvector = m_new_eigenvector;
+                m_backend.copy(m_new_eigenvector, m_eigenvector);
 
                 ++m_iterations;
 

@@ -5,47 +5,56 @@
 #include <random>
 
 #include <itesol/algorithms/power_method.hpp>
+#include <itesol/backends/blas.hpp>
 #include <itesol/backends/eigen_dense.hpp>
+#include <itesol/test_matrices/random_symmetric.hpp>
 
-TEMPLATE_TEST_CASE("PowerMethod using EigenDenseBackend", "[algorithms][eigen]",
-                   float, double, std::complex<float>, std::complex<double>) {
+TEMPLATE_TEST_CASE("PowerMethod EigenDense backend", "[algorithms][eigen]",
+                   double, std::complex<double>, long double,
+                   std::complex<long double>) {
     using Backend = itesol::backends::EigenDense<TestType>;
     using Algorithm = itesol::algorithms::PowerMethod<Backend>;
 
-    const int dimension = 128;
+    const int dimension = 64;
+    const typename Backend::RealScalar tolerance = 1e-6;
 
     Backend backend{};
-    std::uniform_real_distribution<itesol::RealType<TestType>> dist(0.0, 1.0);
-    std::mt19937_64 prng(0);
 
     auto matrix = backend.create_matrix(dimension, dimension);
+    itesol::test_matrices::initialize_random_symmetric<Backend>(matrix);
 
-    if constexpr (itesol::IsComplex<TestType>) {
-        for (int i = 0; i < dimension; ++i) {
-            for (int j = i + 1; j < dimension; ++j) {
-                matrix(i, j).real(dist(prng));
-                matrix(i, j).imag(dist(prng));
-                matrix(j, i) = std::conj(matrix(i, j));
-            }
-            matrix(i, i).real(dist(prng));
-            matrix(i, i).imag(0.0);
-        }
-    } else {
-        for (int i = 0; i < dimension; ++i) {
-            for (int j = i + 1; j < dimension; ++j) {
-                matrix(i, j) = dist(prng);
-                matrix(j, i) = matrix(i, j);
-            }
-            matrix(i, i) = dist(prng);
-        }
-    }
-
-    Algorithm algorithm(dimension, backend);
+    Algorithm algorithm(dimension, backend, 10000, tolerance);
     algorithm.compute(backend.make_linear_operator(matrix));
+
+    REQUIRE(algorithm.is_converged());
 
     Eigen::SelfAdjointEigenSolver<typename Backend::Matrix> solver;
     solver.compute(matrix);
 
     REQUIRE(Catch::Approx(algorithm.get_eigenvalue()) ==
             solver.eigenvalues().cwiseAbs().maxCoeff());
+}
+
+TEMPLATE_TEST_CASE("PowerMethod Blas backend", "[algorithms][blas]", double) {
+    using Backend = itesol::backends::Blas<TestType>;
+    using Algorithm = itesol::algorithms::PowerMethod<Backend>;
+
+    const int dimension = 64;
+    const typename Backend::RealScalar tolerance = 1e-6;
+
+    Backend backend{};
+
+    auto matrix = backend.create_matrix(dimension, dimension);
+    itesol::test_matrices::initialize_random_symmetric<Backend>(matrix);
+
+    //    Algorithm algorithm(dimension, backend, 10000, tolerance);
+    //    algorithm.compute(backend.make_linear_operator(matrix));
+    //
+    //    REQUIRE(algorithm.is_converged());
+    //
+    //    Eigen::SelfAdjointEigenSolver<typename Backend::Matrix> solver;
+    //    solver.compute(matrix);
+    //
+    //    REQUIRE(Catch::Approx(algorithm.get_eigenvalue()) ==
+    //            solver.eigenvalues().cwiseAbs().maxCoeff());
 }

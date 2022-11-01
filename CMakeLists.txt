@@ -14,6 +14,8 @@ add_subdirectory(dependencies/fmt)
 add_subdirectory(dependencies/spdlog)
 add_subdirectory(dependencies/Catch2)
 
+find_package(BLAS REQUIRED)
+
 # check if IPO is supported
 include(CheckIPOSupported)
 check_ipo_supported(
