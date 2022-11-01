@@ -9,6 +9,7 @@
 
 #include "../concepts.hpp"
 
+#include <functional>
 #include <memory>
 #include <random>
 
