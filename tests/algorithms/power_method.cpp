@@ -8,23 +8,36 @@
 #include <itesol/backends/eigen_dense.hpp>
 
 TEMPLATE_TEST_CASE("PowerMethod using EigenDenseBackend", "[algorithms][eigen]",
-                   float, double) {
+                   float, double, std::complex<float>, std::complex<double>) {
     using Backend = itesol::backends::EigenDense<TestType>;
     using Algorithm = itesol::algorithms::PowerMethod<Backend>;
 
     const int dimension = 128;
 
     Backend backend{};
-    std::uniform_real_distribution<TestType> dist(0.0, 1.0);
+    std::uniform_real_distribution<itesol::RealType<TestType>> dist(0.0, 1.0);
     std::mt19937_64 prng(0);
 
     auto matrix = backend.create_matrix(dimension, dimension);
-    for (int i = 0; i < dimension; ++i) {
-        for (int j = i + 1; j < dimension; ++j) {
-            matrix(i, j) = dist(prng);
-            matrix(j, i) = matrix(i, j);
+
+    if constexpr (itesol::IsComplex<TestType>) {
+        for (int i = 0; i < dimension; ++i) {
+            for (int j = i + 1; j < dimension; ++j) {
+                matrix(i, j).real(dist(prng));
+                matrix(i, j).imag(dist(prng));
+                matrix(j, i) = std::conj(matrix(i, j));
+            }
+            matrix(i, i).real(dist(prng));
+            matrix(i, i).imag(0.0);
         }
-        matrix(i, i) = dist(prng);
+    } else {
+        for (int i = 0; i < dimension; ++i) {
+            for (int j = i + 1; j < dimension; ++j) {
+                matrix(i, j) = dist(prng);
+                matrix(j, i) = matrix(i, j);
+            }
+            matrix(i, i) = dist(prng);
+        }
     }
 
     Algorithm algorithm(dimension, backend);

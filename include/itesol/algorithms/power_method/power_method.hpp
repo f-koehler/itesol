@@ -8,6 +8,7 @@
 #include "spdlog/spdlog.h"
 
 #include "../../backends/concept.hpp"
+#include "../../concepts.hpp"
 
 namespace itesol::algorithms {
     template <typename PowerMethod>
@@ -19,6 +20,7 @@ namespace itesol::algorithms {
         using Backend = BackendT;
         using Index = typename Backend::Index;
         using Scalar = typename Backend::Scalar;
+        using RealScalar = RealType<Scalar>;
         using Vector = typename Backend::Vector;
         using VectorCRef = typename Backend::VectorCRef;
         using Matrix = typename Backend::Matrix;
@@ -29,11 +31,11 @@ namespace itesol::algorithms {
         Index m_dimension;
         Backend m_backend;
         Index m_max_iterations;
-        Scalar m_tolerance;
+        RealScalar m_tolerance;
 
         bool m_converged;
         Scalar m_rayleigh_quotient;
-        Scalar m_residual;
+        RealScalar m_residual;
         Vector m_eigenvector;
         Vector m_new_eigenvector;
         Index m_iterations;
@@ -87,7 +89,7 @@ namespace itesol::algorithms {
       public:
         explicit PowerMethod(Index dimension, const Backend &backend,
                              Index max_iterations = 1000,
-                             Scalar tolerance = 1e-10)
+                             RealScalar tolerance = 1e-10)
             : m_dimension(dimension),
               m_backend(backend),
               m_max_iterations(max_iterations),
@@ -119,7 +121,13 @@ namespace itesol::algorithms {
 
         [[nodiscard]] bool is_converged() const { return m_converged; }
 
-        const Scalar &get_eigenvalue() const { return m_rayleigh_quotient; }
+        const RealScalar get_eigenvalue() const {
+            if constexpr (IsComplex<Scalar>) {
+                return m_rayleigh_quotient.real();
+            } else {
+                return m_rayleigh_quotient;
+            }
+        }
 
         VectorCRef get_eigenvector() const { return m_new_eigenvector; }
 
