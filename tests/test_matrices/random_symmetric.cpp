@@ -4,7 +4,7 @@
 #include <itesol/backends/eigen_dense.hpp>
 #include <itesol/test_matrices/random_symmetric.hpp>
 
-TEMPLATE_TEST_CASE("Random symmetric matrix with EigenDense backend",
+TEMPLATE_TEST_CASE("Random symmetric matrix EigenDense backend",
                    "[test_matrices][eigen]", float, double, std::complex<float>,
                    std::complex<double>) {
     using Backend = itesol::backends::EigenDense<TestType>;
@@ -29,7 +29,7 @@ TEMPLATE_TEST_CASE("Random symmetric matrix with EigenDense backend",
     }
 }
 
-TEMPLATE_TEST_CASE("Random symmetric matrix with blas backend",
+TEMPLATE_TEST_CASE("Random symmetric matrix blas backend",
                    "[test_matrices][blas]", float, double, std::complex<float>,
                    std::complex<double>) {
     using Backend = itesol::backends::EigenDense<TestType>;
