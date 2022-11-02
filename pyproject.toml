@@ -1,0 +1,21 @@
+[tool.poetry]
+authors = ["Fabian Köhler <fabian.koehler@protonmail.ch>"]
+description = "Iterative eigensolvers implemented in C++"
+license = "MIT"
+name = "itesol"
+version = "0.0.1"
+
+[tool.poetry.build]
+script = "build.py"
+
+[tool.poetry.dependencies]
+numpy = "^1.23.4"
+python = "^3.9"
+ninja = "^1.10.2"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.2.0"
+
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.0.0"]

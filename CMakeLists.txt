@@ -12,6 +12,7 @@ add_subdirectory(dependencies/eigen)
 add_subdirectory(dependencies/fmt)
 add_subdirectory(dependencies/spdlog)
 add_subdirectory(dependencies/Catch2)
+add_subdirectory(dependencies/pybind11)
 
 # check if IPO is supported
 include(CheckIPOSupported)
@@ -36,3 +37,4 @@ endif()
 # set_property(TARGET itesol PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
 # endif()
 add_subdirectory(tests)
+add_subdirectory(python)
