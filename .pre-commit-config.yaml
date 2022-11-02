@@ -16,8 +16,17 @@ repos:
   - repo: https://github.com/cmake-lint/cmake-lint
     rev: 1.4.2
     hooks:
-    - id: cmakelint
+      - id: cmakelint
   - repo: https://github.com/BlankSpruce/gersemi
     rev: 0.8.2
     hooks:
       - id: gersemi
+  - repo: https://github.com/psf/black
+    rev: 22.10.0
+    hooks:
+      - id: black
+  - repo: https://github.com/pycqa/isort
+    rev: 5.10.1
+    hooks:
+      - id: isort
+        name: isort (python)

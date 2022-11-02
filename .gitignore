@@ -2,3 +2,6 @@ cmake-build-*/
 .idea/
 build/
 poetry.lock
+__pycache__/
+dist/
+setup.py

@@ -1,14 +1,17 @@
 import os
 from pathlib import Path
 import subprocess
+import sys
 
 from setuptools.command.build_ext import build_ext
 from setuptools import Extension
+
 
 class CMakeExtension(Extension):
     def __init__(self, name: str, sourcedir: str = ""):
         super().__init__(name, sources=[])
         self.sourcedir = os.fspath(Path(sourcedir).resolve())
+
 
 class CMakeBuild(build_ext):
     def build_extension(self, ext: CMakeExtension):
@@ -18,7 +21,12 @@ class CMakeBuild(build_ext):
         configuration = "Debug" if debug else "Release"
         cmake_generator = os.environ.get("CMAKE_GENERATOR", "")
 
-        cmake_args = []
+        cmake_args = [
+            f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={extdir}{os.sep}",
+            f"-DPYTHON_EXECUTABLE={sys.executable}",
+            f"-DCMAKE_BUILD_TYPE={configuration}",
+            f"-DITESOL_BUILD_TESTS=OFF",
+        ]
         build_args = []
 
         if "CMAKE_ARGS" in os.environ:
@@ -30,7 +38,10 @@ class CMakeBuild(build_ext):
                     import ninja
 
                     ninja_executable = Path(ninja.BIN_DIR) / "ninja"
-                    cmake_args += ["-GNinja", f"-DCMAKE_MAKE_PROGRAM={ninja_executable}"]
+                    cmake_args += [
+                        "-GNinja",
+                        f"-DCMAKE_MAKE_PROGRAM={ninja_executable}",
+                    ]
                 except ImportError:
                     pass
         else:
@@ -43,15 +54,19 @@ class CMakeBuild(build_ext):
         build_temp = Path(self.build_temp) / ext.name
         build_temp.mkdir(exist_ok=True, parents=True)
 
-        subprocess.run(["cmake", ext.sourcedir]+cmake_args, cwd=build_temp, check=True)
-        subprocess.run(["cmake", "--build", "."]+build_args, cwd=build_temp, check=True)
+        subprocess.run(
+            ["cmake", ext.sourcedir] + cmake_args, cwd=build_temp, check=True
+        )
+        subprocess.run(
+            ["cmake", "--build", "."] + build_args, cwd=build_temp, check=True
+        )
 
 
 def build(setup_kwargs):
     setup_kwargs.update(
         {
             "ext_modules": [CMakeExtension("itesol_core")],
-            "cmd_class": {"build_ext": CMakeBuild},
+            "cmdclass": {"build_ext": CMakeBuild},
             "zip_safe": False,
         }
     )
