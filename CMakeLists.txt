@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
 # turn off eigen tests
 option(BUILD_TESTING OFF)
@@ -25,8 +26,11 @@ if(NOT itesol_ipo_supported)
     message(WARNING "IPO is not supported: ${itesol_ipo_output}")
 endif()
 
+find_package(Doxygen)
+
 option(ITESOL_BUILD_TESTS "Build tests" ON)
 option(ITESOL_BUILD_PYTHON "Build python module" OFF)
+option(ITESOL_BUILD_DOCS "Build documentation" ${DOXYGEN_FOUND})
 
 if(ITESOL_BUILD_TESTS)
     add_subdirectory(dependencies/Catch2)
@@ -36,4 +40,8 @@ endif()
 if(ITESOL_BUILD_PYTHON)
     add_subdirectory(dependencies/pybind11)
     add_subdirectory(python)
+endif()
+
+if(ITESOL_BUILD_DOCS)
+    add_subdirectory(docs)
 endif()

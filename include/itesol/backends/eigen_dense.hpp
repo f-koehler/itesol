@@ -24,6 +24,11 @@ namespace itesol::backends {
 
         using LinearOperator = std::function<void(VectorCRef, VectorRef)>;
 
+        ///
+        /// Create an unitialized vector.
+        /// \param rows Number of rows in vector.
+        /// \return A new uninitialized vector of specified size.
+        ///
         Vector create_vector(Index rows) { return Vector(rows); }
         Vector create_zero_vector(Index rows) { return Vector::Zero(rows); }
         Vector create_random_vector(Index rows) { return Vector::Random(rows); }
