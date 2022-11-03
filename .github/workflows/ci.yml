@@ -78,6 +78,7 @@ jobs:
           - "modernize-*"
           - "portability-*"
           - "performance-*"
+          - "clang-analyzer-*"
     steps:
       - name: Checkout repository.
         uses: actions/checkout@v3
