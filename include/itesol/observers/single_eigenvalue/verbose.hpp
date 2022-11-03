@@ -1,6 +1,8 @@
 #ifndef INCLUDE_ITESOL_OBSERVERS_SINGLE_EIGENVALUE_VERBOSE
 #define INCLUDE_ITESOL_OBSERVERS_SINGLE_EIGENVALUE_VERBOSE
 
+#include <spdlog/spdlog.h>
+
 #include "quiet.hpp"
 
 namespace itesol::observers::single_eigenvalue {
