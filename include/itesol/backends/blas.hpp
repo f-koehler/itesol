@@ -33,15 +33,15 @@ namespace itesol::backends {
             const Index m_columns;
             std::shared_ptr<Scalar[]> data;
 
-            Index rows() const { return m_rows; }
+            [[nodiscard]] auto rows() const -> Index { return m_rows; }
 
-            Index columns() const { return m_rows; }
+            [[nodiscard]] auto columns() const -> Index { return m_rows; }
 
-            Scalar &operator()(Index row, Index column) {
+            auto operator()(Index row, Index column) -> Scalar & {
                 return data.get()[row * m_columns + column];
             }
 
-            const Scalar &operator()(Index row, Index column) const {
+            auto operator()(Index row, Index column) const -> const Scalar & {
                 return data.get()[row * m_columns + column];
             }
         };
@@ -50,7 +50,7 @@ namespace itesol::backends {
             const Index m_rows;
             std::shared_ptr<Scalar[]> data;
 
-            Index rows() const { return m_rows; }
+            [[nodiscard]] auto rows() const -> Index { return m_rows; }
         };
 
         using MatrixRef = Matrix &;
@@ -60,19 +60,19 @@ namespace itesol::backends {
 
         using LinearOperator = std::function<void(VectorCRef, VectorRef)>;
 
-        Vector create_vector(Index rows) {
+        auto create_vector(Index rows) -> Vector {
             return Vector{
                 rows, std::shared_ptr<Scalar[]>(
                           new Scalar[rows], std::default_delete<Scalar[]>())};
         }
 
-        Vector create_zero_vector(Index rows) {
+        auto create_zero_vector(Index rows) -> Vector {
             auto v = create_vector(rows);
             std::fill_n(v.data.get(), rows, Scalar(0));
             return v;
         }
 
-        Vector create_random_vector(Index rows) {
+        auto create_random_vector(Index rows) -> Vector {
             auto v = create_vector(rows);
             std::mt19937_64 prng;
             std::uniform_real_distribution<RealScalar> dist(0, 1);
@@ -80,20 +80,24 @@ namespace itesol::backends {
             return v;
         }
 
-        Matrix create_matrix(Index rows, Index cols) {
-            return Matrix{
-                rows, cols,
-                std::shared_ptr<Scalar[]>(new Scalar[rows * cols],
-                                          std::default_delete<Scalar[]>())};
+        auto create_matrix(Index rows, Index cols) -> Matrix {
+            return Matrix{rows, cols,
+                          std::shared_ptr<Scalar[]>(
+                              new Scalar[static_cast<unsigned long>(rows) *
+                                         static_cast<unsigned long>(cols)],
+                              std::default_delete<Scalar[]>())};
         }
 
-        Matrix create_zero_matrix(Index rows, Index cols) {
+        auto create_zero_matrix(Index rows, Index cols) -> Matrix {
             auto m = create_matrix(rows, cols);
-            std::fill_n(m.data.get(), rows * cols, Scalar(0));
+            std::fill_n(m.data.get(),
+                        static_cast<unsigned long>(rows) *
+                            static_cast<unsigned long>(cols),
+                        Scalar(0));
             return m;
         }
 
-        LinearOperator make_linear_operator(MatrixCRef matrix) {
+        auto make_linear_operator(MatrixCRef matrix) -> LinearOperator {
             return [matrix](VectorCRef x, VectorRef y) {
                 if (matrix.m_rows != y.m_rows) {
                     throw std::runtime_error("matrix.m_rows != y.m_rows");
@@ -130,7 +134,7 @@ namespace itesol::backends {
             };
         }
 
-        Scalar dotc(VectorCRef x, VectorCRef y) {
+        auto dotc(VectorCRef x, VectorCRef y) -> Scalar {
             if (x.m_rows != y.m_rows) {
                 throw std::length_error("x and y must have the same length");
             }
@@ -151,7 +155,7 @@ namespace itesol::backends {
             }
         }
 
-        RealScalar norm(VectorCRef x) {
+        auto norm(VectorCRef x) -> RealScalar {
             if constexpr (std::is_same_v<Scalar, float>) {
                 return cblas_snrm2(x.m_rows, x.data.get(), 1);
             } else if constexpr (std::is_same_v<Scalar, double>) {

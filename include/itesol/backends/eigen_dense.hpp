@@ -29,23 +29,29 @@ namespace itesol::backends {
         /// \param rows Number of rows in vector.
         /// \return A new uninitialized vector of specified size.
         ///
-        Vector create_vector(Index rows) { return Vector(rows); }
-        Vector create_zero_vector(Index rows) { return Vector::Zero(rows); }
-        Vector create_random_vector(Index rows) { return Vector::Random(rows); }
+        auto create_vector(Index rows) -> Vector { return Vector(rows); }
+        auto create_zero_vector(Index rows) -> Vector {
+            return Vector::Zero(rows);
+        }
+        auto create_random_vector(Index rows) -> Vector {
+            return Vector::Random(rows);
+        }
 
-        Matrix create_matrix(Index rows, Index cols) {
+        auto create_matrix(Index rows, Index cols) -> Matrix {
             return Matrix(rows, cols);
         }
-        Matrix create_zero_matrix(Index rows, Index cols) {
+        auto create_zero_matrix(Index rows, Index cols) -> Matrix {
             return Matrix::Zero(rows, cols);
         }
 
-        LinearOperator make_linear_operator(MatrixCRef matrix) {
+        auto make_linear_operator(MatrixCRef matrix) -> LinearOperator {
             return [&matrix](VectorCRef x, VectorRef y) { y = matrix * x; };
         }
 
-        Scalar dotc(VectorCRef x, VectorCRef y) { return x.adjoint() * y; }
-        RealScalar norm(VectorCRef x) { return x.norm(); }
+        auto dotc(VectorCRef x, VectorCRef y) -> Scalar {
+            return x.adjoint() * y;
+        }
+        auto norm(VectorCRef x) -> RealScalar { return x.norm(); }
 
         void a_x_plus_y(const Scalar &alpha, VectorCRef x, VectorRef y) {
             y += alpha * x;

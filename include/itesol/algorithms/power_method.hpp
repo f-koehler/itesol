@@ -27,7 +27,7 @@ namespace itesol::algorithms {
         Index m_max_iterations;
         RealScalar m_tolerance;
 
-        bool m_converged;
+        bool m_converged{false};
         Scalar m_rayleigh_quotient;
         RealScalar m_residual;
         Vector m_eigenvector;
@@ -88,7 +88,7 @@ namespace itesol::algorithms {
               m_backend(backend),
               m_max_iterations(max_iterations),
               m_tolerance(tolerance),
-              m_converged(false),
+
               m_rayleigh_quotient(0),
               m_residual(0),
               m_eigenvector(m_backend.create_random_vector(dimension)),
@@ -104,18 +104,18 @@ namespace itesol::algorithms {
             compute_impl(op, observer);
         }
 
-        Index get_dimension() const { return m_dimension; }
-        const Backend &get_backend() const { return m_backend; }
-        Index get_max_iterations() const { return m_max_iterations; }
+        auto get_dimension() const -> Index { return m_dimension; }
+        auto get_backend() const -> const Backend & { return m_backend; }
+        auto get_max_iterations() const -> Index { return m_max_iterations; }
         void set_max_iterations(const Index &max_iterations) {
             m_max_iterations = max_iterations;
         }
-        Scalar get_tolerance() const { return m_tolerance; }
+        auto get_tolerance() const -> Scalar { return m_tolerance; }
         void set_tolerance(const Scalar &tolerance) { m_tolerance = tolerance; }
 
-        [[nodiscard]] bool is_converged() const { return m_converged; }
+        [[nodiscard]] auto is_converged() const -> bool { return m_converged; }
 
-        const RealScalar get_eigenvalue() const {
+        auto get_eigenvalue() const -> const RealScalar {
             if constexpr (IsComplex<Scalar>) {
                 return m_rayleigh_quotient.real();
             } else {
@@ -123,11 +123,11 @@ namespace itesol::algorithms {
             }
         }
 
-        VectorCRef get_eigenvector() const { return m_new_eigenvector; }
+        auto get_eigenvector() const -> VectorCRef { return m_new_eigenvector; }
 
-        const Scalar &get_residual() const { return m_residual; }
+        auto get_residual() const -> const Scalar & { return m_residual; }
 
-        Index get_iterations() const { return m_iterations; }
+        auto get_iterations() const -> Index { return m_iterations; }
 
         void set_initial_vector(VectorCRef initial_vector) {
             m_backend.copy(initial_vector, m_eigenvector);

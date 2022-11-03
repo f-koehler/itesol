@@ -1,6 +1,8 @@
 #ifndef INCLUDE_ITESOL_OBSERVERS_SINGLE_EIGENVALUE_QUIET
 #define INCLUDE_ITESOL_OBSERVERS_SINGLE_EIGENVALUE_QUIET
 
+#include <vector>
+
 #include "base.hpp"
 
 namespace itesol::observers::single_eigenvalue {

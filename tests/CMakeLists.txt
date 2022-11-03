@@ -1,4 +1,3 @@
-
 include(CTest)
 include(Catch)
 enable_testing()
