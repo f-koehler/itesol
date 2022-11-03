@@ -91,6 +91,6 @@ jobs:
       - name: Install documentation tools.
         run: sudo apt-get install -yq cmake clang-14 doxygen python3-sphinx python3-breathe
       - name: Configure CMake project.
-        run: CC=${{ matrix.toolchain.cc }} CXX=${{ matrix.toolchain.cxx }} cmake -B build -DITESOL_BUILD_TESTS=OFF -DITESOL_BUILD_DOCS=ON
+        run: CC=clang-14 CXX=clang++-14 cmake -B build -DITESOL_BUILD_TESTS=OFF -DITESOL_BUILD_DOCS=ON
       - name: Build CMake project.
         run: cmake --build build
