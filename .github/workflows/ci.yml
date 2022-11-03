@@ -68,18 +68,27 @@ jobs:
       - name: Run tests.
         working-directory: build/tests
         run: ctest
-  lint:
-    name: Linting
+  clang_tidy:
+    name: clang-tidy (${{ matrix.checks }})
     runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        checks:
+          - "bugprone-*"
+          - "modernize-*"
+          - "portability-*"
+          - "performance-*"
     steps:
       - name: Checkout repository.
         uses: actions/checkout@v3
         with:
           submodules: true
       - name: Install linters.
-        run: sudo apt-get install -yq cmake clang-14 clang-tidy-14 clang-format-14 cppcheck cpplint
+        run: sudo apt-get install -yq cmake clang-14 clang-tidy-14
       - name: Configure CMake project.
-        run: CC=${{ matrix.toolchain.cc }} CXX=${{ matrix.toolchain.cxx }} cmake -B build
+        run: CC=clang-14 CXX=clang++-14 cmake -B build -DITESOL_BUILD_TESTS=ON -DITESOL_BUILD_PYTHON=ON
+      - name: Run clang-tidy.
+        run: clang-tidy-14 -p build/compile_commands.json --checks="${{ matrix.checks }}" $(find python -name "*.cpp") $(find include -name "*.hpp") $(find tests -name "*.cpp")
   docs:
     name: Documentation
     runs-on: ubuntu-22.04
