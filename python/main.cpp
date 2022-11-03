@@ -1,25 +1,63 @@
 #include <pybind11/eigen.h>
+#include <pybind11/functional.h>
 #include <pybind11/pybind11.h>
 
 #include <itesol/algorithms/power_method.hpp>
 #include <itesol/backends/eigen_dense.hpp>
+#include <itesol/test_matrices/random_symmetric.hpp>
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(itesol_core, m) {
-    m.doc() = "itesol core module";
-
+template <typename Scalar>
+void define_eigen_dense_backend(py::module_ &module, const char* name) {
     using Backend = itesol::backends::EigenDense<double>;
-    py::class_<Backend>(m, "EigenDenseFloat64")
+    py::class_<Backend>(module, name)
         .def(py::init<>())
         .def("create_vector", &Backend::create_vector)
         .def("create_zero_vector", &Backend::create_zero_vector)
         .def("create_random_vector", &Backend::create_random_vector)
         .def("create_matrix", &Backend::create_matrix)
         .def("create_zero_matrix", &Backend::create_zero_matrix);
+}
 
+template <typename Backend>
+void define_power_method(py::module_ &module, const char *name) {
     using Algorithm = itesol::algorithms::PowerMethod<Backend>;
-    py::class_<Algorithm>(m, "PowerMethodFloat64")
+
+    py::class_<Algorithm>(module, name)
         .def(py::init<typename Backend::Index, const Backend &,
                       typename Backend::Index, typename Backend::RealScalar>());
+}
+
+PYBIND11_MODULE(itesol_core, m) {
+    m.doc() = "itesol core module";
+
+    define_eigen_dense_backend<float>(m, "EigenDenseBackendFloat32");
+    define_eigen_dense_backend<double>(m, "EigenDenseBackendFloat64");
+    define_eigen_dense_backend<std::complex<float>>(
+        m, "EigenDenseBackendComplex64");
+    define_eigen_dense_backend<std::complex<double>>(
+        m, "EigenDenseBackendComplex128");
+
+    define_power_method<itesol::backends::EigenDense<float>>(
+        m, "PowerMethodFloat32");
+    define_power_method<itesol::backends::EigenDense<double>>(
+        m, "PowerMethodFloat64");
+    define_power_method<itesol::backends::EigenDense<std::complex<float>>>(
+        m, "PowerMethodComplex64");
+    define_power_method<itesol::backends::EigenDense<std::complex<double>>>(
+        m, "PowerMethodComplex128");
+
+    m.def("initialize_random_symmetric_float_32",
+          &itesol::test_matrices::initialize_random_symmetric<
+              itesol::backends::EigenDense<float>>);
+    m.def("initialize_random_symmetric_float_64",
+          &itesol::test_matrices::initialize_random_symmetric<
+              itesol::backends::EigenDense<double>>);
+    m.def("initialize_random_symmetric_complex_64",
+          &itesol::test_matrices::initialize_random_symmetric<
+              itesol::backends::EigenDense<std::complex<float>>>);
+    m.def("initialize_random_symmetric_complex_128",
+          &itesol::test_matrices::initialize_random_symmetric<
+              itesol::backends::EigenDense<std::complex<double>>>);
 }
