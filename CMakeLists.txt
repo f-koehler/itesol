@@ -30,7 +30,7 @@ find_package(Doxygen)
 
 option(ITESOL_BUILD_TESTS "Build tests" ON)
 option(ITESOL_BUILD_PYTHON "Build python module" OFF)
-option(ITESOL_BUILD_DOCS "Build documentation" ${DOXYGEN_FOUND})
+option(ITESOL_BUILD_DOCS "Build documentation" OFF)
 
 if(ITESOL_BUILD_TESTS)
     add_subdirectory(dependencies/Catch2)
