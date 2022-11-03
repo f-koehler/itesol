@@ -26,6 +26,7 @@ class CMakeBuild(build_ext):
             f"-DPYTHON_EXECUTABLE={sys.executable}",
             f"-DCMAKE_BUILD_TYPE={configuration}",
             f"-DITESOL_BUILD_TESTS=OFF",
+            f"-DITESOL_BUILD_PYTHON=ON",
         ]
         build_args = []
 

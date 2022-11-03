@@ -11,7 +11,6 @@ option(BUILD_TESTING OFF)
 add_subdirectory(dependencies/eigen)
 add_subdirectory(dependencies/fmt)
 add_subdirectory(dependencies/spdlog)
-add_subdirectory(dependencies/pybind11)
 
 # check if IPO is supported
 include(CheckIPOSupported)
@@ -26,10 +25,14 @@ if(NOT itesol_ipo_supported)
 endif()
 
 option(ITESOL_BUILD_TESTS "Build tests" ON)
+option(ITESOL_BUILD_PYTHON "Build python module" OFF)
 
 if(ITESOL_BUILD_TESTS)
     add_subdirectory(dependencies/Catch2)
     add_subdirectory(tests)
 endif()
 
-add_subdirectory(python)
+if(ITESOL_BUILD_PYTHON)
+    add_subdirectory(dependencies/pybind11)
+    add_subdirectory(python)
+endif()
